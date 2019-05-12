@@ -226,12 +226,12 @@ public class Okno {
 																
 																
 																tabela = new JTable(data, columnNames);
-																tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-																tabela.setShowGrid(false);
-																tabela.setFillsViewportHeight(true);
-																tabela.setCellSelectionEnabled(true);
 																tabela.setColumnSelectionAllowed(true);
-																tabela.setBackground(Color.DARK_GRAY);
+																tabela.setShowGrid(false);
+																tabela.setShowVerticalLines(false);
+																tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+																tabela.setFillsViewportHeight(true);
+																tabela.setBackground(Color.WHITE);
 															
 																BooklistPanel.add(tabela);
 																btnDodajDoBazy.addActionListener(new ActionListener() {
