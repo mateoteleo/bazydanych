@@ -4,7 +4,8 @@ public class DbEdit {
 
 	String query;
 
-	public void enterData(String author, String title, int items) {
+
+	public void enterData(String firstname, String lastname, String title, int items, String table) {
 		try {
 			// tworzenie obiektu Connection, który jest niezbêdny do komunikacji z baz¹ SQL
 			// - kierujemy go do bazy/schema, dodatkowo z inf o kodowaniu znaków
@@ -18,7 +19,7 @@ public class DbEdit {
 
 			// tworzenie w³aœciwego zapytania sql
 			// INSERT INTO Heroes (id, name, siblings) VALUES (2, 'Ron Weasley', 6);
-			query = ("INSERT INTO books (author, title, items) VALUES ('" + author + "','" + title + "'," + items
+			query = ("INSERT INTO " + table + " (firstname, lastname, title, items) VALUES ('" + firstname + "','"+ lastname + "','" + title + "'," + items
 					+ ")");
 
 			// wywo³ywanie metody executeUpdate z parametrem query -> do wstawiania nowych
