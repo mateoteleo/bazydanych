@@ -1,8 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,23 +19,23 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.SpinnerNumberModel;
 
 public class Okno {
 
 	private JFrame frmMainFrame;
 	private JTable table_1;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTable tabela;
 	private JTextField textField_lastname;
 	private JTextField textField_firstname;
+	private JTable tabela;
 	private JTextField textField_title;
+	private JTextField firstNameData;
+	private JTextField lastNameData;
+	private JTextField titleData;
 
 	/**
 	 * Launch the application.
@@ -54,11 +54,9 @@ public class Okno {
 		});
 	}
 
-	
 	public Okno() {
 		initialize();
 	}
-
 
 	private void initialize() {
 		DbEdit baseEditor = new DbEdit();
@@ -79,74 +77,24 @@ public class Okno {
 		booksPanelMaster.setLayout(new CardLayout(0, 0));
 		booksPanel.add(booksPanelMaster, BorderLayout.CENTER);
 
-		JPanel rentPanel = new JPanel();
-		rentPanel.setForeground(Color.WHITE);
-		rentPanel.setBorder(new LineBorder(Color.WHITE, 1, true));
-		rentPanel.setBackground(Color.BLACK);
-		booksPanelMaster.add(rentPanel, "rentPanel");
-
-		JPanel addPanel = new JPanel();
-		addPanel.setBackground(Color.BLACK);
-		addPanel.setForeground(Color.GRAY);
-		booksPanelMaster.add(addPanel, "addPanel");
-
-		JLabel lblAuthorField = new JLabel("Imi\u0119");
-		lblAuthorField.setForeground(Color.WHITE);
-		addPanel.add(lblAuthorField);
-		lblAuthorField.setVerticalAlignment(SwingConstants.TOP);
-		lblAuthorField.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAuthorField.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		JTextPane firstNameData = new JTextPane();
-		addPanel.add(firstNameData);
-
-		JLabel lblLastNameField = new JLabel("Nazwisko");
-		lblLastNameField.setVerticalAlignment(SwingConstants.TOP);
-		lblLastNameField.setHorizontalAlignment(SwingConstants.CENTER);
-		lblLastNameField.setForeground(Color.WHITE);
-		lblLastNameField.setAlignmentX(0.5f);
-		addPanel.add(lblLastNameField);
-
-		JTextPane lastNameData = new JTextPane();
-		addPanel.add(lastNameData);
-
-		JLabel lblNewLabel_1 = new JLabel("Tytu\u0142");
-		lblNewLabel_1.setForeground(Color.WHITE);
-		addPanel.add(lblNewLabel_1);
-
-		JTextPane titleData = new JTextPane();
-		addPanel.add(titleData);
-
-		JLabel lblNewLabel_2 = new JLabel("Egzemplarze");
-		lblNewLabel_2.setForeground(Color.WHITE);
-		addPanel.add(lblNewLabel_2);
-
-		JSpinner spinnerItems = new JSpinner();
-		spinnerItems.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		addPanel.add(spinnerItems);
-
-		JButton btnDodajDoBazy = new JButton("Dodaj do bazy");
-		btnDodajDoBazy.setBackground(SystemColor.textHighlight);
-		addPanel.add(btnDodajDoBazy);
-
 		JPanel BooklistPanel = new JPanel();
 		booksPanelMaster.add(BooklistPanel, "bookListPanel");
+
 		MyTableModel MyTableModel = new MyTableModel();
 		BooklistPanel.setLayout(new BorderLayout(0, 0));
+
 		tabela = new JTable(MyTableModel);
 
 		tabela.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				int row = tabela.getSelectedRow();
-				int selectedBookId = (int) tabela.getValueAt(row, 4);
 				String selectedFirstName = (String) tabela.getValueAt(row, 0);
 				String selectedLastName = (String) tabela.getValueAt(row, 1);
 				String selectedTitle = (String) tabela.getValueAt(row, 2);
 				textField_firstname.setText(selectedFirstName);
 				textField_lastname.setText(selectedLastName);
 				textField_title.setText(selectedTitle);
-
 			}
 		});
 
@@ -157,38 +105,63 @@ public class Okno {
 		tabela.setFillsViewportHeight(true);
 		tabela.setBackground(Color.WHITE);
 
-		JScrollPane panelTabeli = new JScrollPane(tabela);
-		BooklistPanel.add(panelTabeli, BorderLayout.WEST);
+		JScrollPane panelLeftBooks = new JScrollPane(tabela);
+		BooklistPanel.add(panelLeftBooks, BorderLayout.WEST);
 
-		JPanel panel = new JPanel();
-		BooklistPanel.add(panel, BorderLayout.CENTER);
-		SpringLayout sl_panel = new SpringLayout();
-		panel.setLayout(sl_panel);
+		JPanel panelRightBooks = new JPanel();
+		BooklistPanel.add(panelRightBooks, BorderLayout.CENTER);
+		panelRightBooks.setLayout(new BorderLayout(0, 0));
 
-		textField_firstname = new JTextField();
-		textField_firstname.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(textField_firstname);
-		textField_firstname.setColumns(10);
+		JPanel panelMenuBooks = new JPanel();
+		panelRightBooks.add(panelMenuBooks, BorderLayout.NORTH);
+
+		JPanel panelCardBooks = new JPanel();
+		panelRightBooks.add(panelCardBooks, BorderLayout.CENTER);
+		panelCardBooks.setLayout(new CardLayout(0, 0));
+
+		JPanel panelBooksA = new JPanel();
+		panelCardBooks.add(panelBooksA, "panelBooksA");
+		SpringLayout sl_panelBooksA = new SpringLayout();
+		panelBooksA.setLayout(sl_panelBooksA);
 
 		textField_lastname = new JTextField();
-		sl_panel.putConstraint(SpringLayout.WEST, textField_firstname, 0, SpringLayout.WEST, textField_lastname);
-		sl_panel.putConstraint(SpringLayout.SOUTH, textField_firstname, -35, SpringLayout.NORTH, textField_lastname);
-		sl_panel.putConstraint(SpringLayout.EAST, textField_firstname, 0, SpringLayout.EAST, textField_lastname);
-		panel.add(textField_lastname);
+		textField_lastname.setHorizontalAlignment(SwingConstants.CENTER);
+		panelBooksA.add(textField_lastname);
 		textField_lastname.setColumns(10);
 
-		textField_title = new JTextField();
-		sl_panel.putConstraint(SpringLayout.EAST, textField_lastname, 0, SpringLayout.EAST, textField_title);
-		sl_panel.putConstraint(SpringLayout.NORTH, textField_title, 163, SpringLayout.NORTH, panel);
-		sl_panel.putConstraint(SpringLayout.WEST, textField_lastname, 0, SpringLayout.WEST, textField_title);
-		sl_panel.putConstraint(SpringLayout.SOUTH, textField_lastname, -34, SpringLayout.NORTH, textField_title);
-		sl_panel.putConstraint(SpringLayout.WEST, textField_title, 23, SpringLayout.WEST, panel);
-		sl_panel.putConstraint(SpringLayout.EAST, textField_title, 225, SpringLayout.WEST, panel);
-		panel.add(textField_title);
-		textField_title.setColumns(10);
+		JLabel lblImi = new JLabel("Imi\u0119");
+		panelBooksA.add(lblImi);
+		lblImi.setHorizontalAlignment(SwingConstants.CENTER);
 
-		JButton btnZapiszZmiany = new JButton("Zapisz zmiany");
-		btnZapiszZmiany.addActionListener(new ActionListener() {
+		textField_firstname = new JTextField();
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, textField_firstname, 31, SpringLayout.WEST, panelBooksA);
+		sl_panelBooksA.putConstraint(SpringLayout.EAST, textField_firstname, -340, SpringLayout.EAST, panelBooksA);
+		sl_panelBooksA.putConstraint(SpringLayout.NORTH, lblImi, 3, SpringLayout.NORTH, textField_firstname);
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, lblImi, 6, SpringLayout.EAST, textField_firstname);
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, textField_lastname, 0, SpringLayout.WEST, textField_firstname);
+		sl_panelBooksA.putConstraint(SpringLayout.EAST, textField_lastname, 0, SpringLayout.EAST, textField_firstname);
+		textField_firstname.setHorizontalAlignment(SwingConstants.CENTER);
+		sl_panelBooksA.putConstraint(SpringLayout.SOUTH, textField_firstname, -332, SpringLayout.SOUTH, panelBooksA);
+		panelBooksA.add(textField_firstname);
+		textField_firstname.setColumns(10);
+
+		JLabel lblNazwisko = new JLabel("Nazwisko");
+		sl_panelBooksA.putConstraint(SpringLayout.NORTH, lblNazwisko, 3, SpringLayout.NORTH, textField_lastname);
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, lblNazwisko, 6, SpringLayout.EAST, textField_lastname);
+		panelBooksA.add(lblNazwisko);
+		lblNazwisko.setHorizontalAlignment(SwingConstants.CENTER);
+
+		textField_title = new JTextField();
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, textField_title, 31, SpringLayout.WEST, panelBooksA);
+		sl_panelBooksA.putConstraint(SpringLayout.SOUTH, textField_lastname, -6, SpringLayout.NORTH, textField_title);
+		sl_panelBooksA.putConstraint(SpringLayout.NORTH, textField_title, 108, SpringLayout.NORTH, panelBooksA);
+		textField_title.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_title.setFocusTraversalKeysEnabled(true);
+		textField_title.setColumns(10);
+		panelBooksA.add(textField_title);
+
+		JButton button_1 = new JButton("Zapisz");
+		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = tabela.getSelectedRow();
 				int selectedBookId = (int) tabela.getValueAt(row, 4);
@@ -197,61 +170,14 @@ public class Okno {
 						textField_title.getText(), selectedBookId, "books");
 				MyTableModel.updateTable();
 				MyTableModel.fireTableDataChanged();
-
 			}
 		});
-		sl_panel.putConstraint(SpringLayout.NORTH, btnZapiszZmiany, 29, SpringLayout.SOUTH, textField_title);
-		sl_panel.putConstraint(SpringLayout.WEST, btnZapiszZmiany, 74, SpringLayout.WEST, panel);
-		panel.add(btnZapiszZmiany);
+		button_1.setBackground(Color.LIGHT_GRAY);
+		button_1.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		panelBooksA.add(button_1);
 
-		btnDodajDoBazy.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				baseEditor.enterData(firstNameData.getText(), lastNameData.getText(), titleData.getText(),
-						(Integer) spinnerItems.getValue(), "books");
-				MyTableModel.updateTable();
-				MyTableModel.fireTableDataChanged();
-			}
-		});
-
-		JToolBar toolBarBooksTools = new JToolBar();
-		toolBarBooksTools.setRollover(true);
-		toolBarBooksTools.setBackground(Color.DARK_GRAY);
-		toolBarBooksTools.setForeground(Color.DARK_GRAY);
-		toolBarBooksTools.addSeparator();
-		booksPanel.add(toolBarBooksTools, BorderLayout.NORTH);
-
-		JButton btnBookList = new JButton("Spis");
-		btnBookList.setBackground(Color.GRAY);
-		btnBookList.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				CardLayout cl = (CardLayout) (booksPanelMaster.getLayout());
-				cl.show(booksPanelMaster, "bookListPanel");
-			}
-		});
-		toolBarBooksTools.add(btnBookList);
-
-		JButton btnAddBook = new JButton("Dodaj");
-		btnAddBook.setBackground(Color.GRAY);
-		btnAddBook.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				CardLayout cl = (CardLayout) (booksPanelMaster.getLayout());
-				cl.show(booksPanelMaster, "addPanel");
-			}
-		});
-		toolBarBooksTools.add(btnAddBook);
-
-		JButton btnLend = new JButton("Wypo\u017Cycz");
-		btnLend.setBackground(Color.GRAY);
-		btnLend.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) (booksPanelMaster.getLayout());
-				cl.show(booksPanelMaster, "rentPanel");
-			}
-		});
-		toolBarBooksTools.add(btnLend);
-
-		JButton btnDeleteBook = new JButton("Usu\u0144");
-		btnDeleteBook.addActionListener(new ActionListener() {
+		JButton button_2 = new JButton("Usu\u0144");
+		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int row = (int) tabela.getValueAt(tabela.getSelectedRow(), 4);
 				baseEditor.deleteData(row, "books");
@@ -259,23 +185,117 @@ public class Okno {
 				MyTableModel.fireTableDataChanged();
 			}
 		});
+		sl_panelBooksA.putConstraint(SpringLayout.NORTH, button_2, 17, SpringLayout.SOUTH, textField_title);
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, button_2, 127, SpringLayout.WEST, panelBooksA);
+		sl_panelBooksA.putConstraint(SpringLayout.NORTH, button_1, 0, SpringLayout.NORTH, button_2);
+		sl_panelBooksA.putConstraint(SpringLayout.EAST, button_1, -21, SpringLayout.WEST, button_2);
+		button_2.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		button_2.setBackground(Color.LIGHT_GRAY);
+		panelBooksA.add(button_2);
 
-		btnDeleteBook.setBackground(Color.GRAY);
-		toolBarBooksTools.add(btnDeleteBook);
+		JLabel label_5 = new JLabel("Tytu\u0142");
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, label_5, 191, SpringLayout.WEST, panelBooksA);
+		sl_panelBooksA.putConstraint(SpringLayout.EAST, textField_title, -6, SpringLayout.WEST, label_5);
+		sl_panelBooksA.putConstraint(SpringLayout.NORTH, label_5, 3, SpringLayout.NORTH, textField_title);
+		panelBooksA.add(label_5);
 
-		JButton btnChangeBook = new JButton("Zmie\u0144");
-		btnChangeBook.setBackground(Color.GRAY);
-		toolBarBooksTools.add(btnChangeBook);
+		JLabel lblPanelZmianyusuwaniaKsiki = new JLabel("Panel zmiany/usuwania ksi\u0105\u017Cki");
+		sl_panelBooksA.putConstraint(SpringLayout.NORTH, lblPanelZmianyusuwaniaKsiki, 10, SpringLayout.NORTH,
+				panelBooksA);
+		sl_panelBooksA.putConstraint(SpringLayout.WEST, lblPanelZmianyusuwaniaKsiki, 31, SpringLayout.WEST,
+				panelBooksA);
+		panelBooksA.add(lblPanelZmianyusuwaniaKsiki);
 
-		JButton btnNewButton = new JButton("FIRE");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		JPanel panelBooksB = new JPanel();
+		panelCardBooks.add(panelBooksB, "panelBooksB");
+		panelBooksB.setForeground(SystemColor.desktop);
+		panelBooksB.setBackground(SystemColor.menu);
+		SpringLayout sl_panelBooksB = new SpringLayout();
+		panelBooksB.setLayout(sl_panelBooksB);
+
+		JLabel label = new JLabel("Imi\u0119");
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, label, 49, SpringLayout.NORTH, panelBooksB);
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, label, 158, SpringLayout.WEST, panelBooksB);
+		label.setVerticalAlignment(SwingConstants.TOP);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setForeground(SystemColor.desktop);
+		label.setAlignmentX(0.5f);
+		panelBooksB.add(label);
+
+		JLabel label_1 = new JLabel("Nazwisko");
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, label_1, 13, SpringLayout.SOUTH, label);
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, label_1, 158, SpringLayout.WEST, panelBooksB);
+		label_1.setVerticalAlignment(SwingConstants.TOP);
+		label_1.setHorizontalAlignment(SwingConstants.CENTER);
+		label_1.setForeground(SystemColor.desktop);
+		label_1.setAlignmentX(0.5f);
+		panelBooksB.add(label_1);
+
+		JLabel label_2 = new JLabel("Tytu\u0142");
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, label_2, 12, SpringLayout.SOUTH, label_1);
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, label_2, 0, SpringLayout.WEST, label);
+		label_2.setForeground(SystemColor.desktop);
+		panelBooksB.add(label_2);
+
+		JLabel label_3 = new JLabel("Egzemplarze");
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, label_3, 133, SpringLayout.NORTH, panelBooksB);
+		sl_panelBooksB.putConstraint(SpringLayout.SOUTH, label_2, -17, SpringLayout.NORTH, label_3);
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, label_3, 158, SpringLayout.WEST, panelBooksB);
+		label_3.setForeground(SystemColor.desktop);
+		panelBooksB.add(label_3);
+
+		JSpinner spinnerItems = new JSpinner();
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, spinnerItems, 108, SpringLayout.WEST, panelBooksB);
+		sl_panelBooksB.putConstraint(SpringLayout.EAST, spinnerItems, -6, SpringLayout.WEST, label_3);
+		spinnerItems.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, spinnerItems, -2, SpringLayout.NORTH, label_3);
+		panelBooksB.add(spinnerItems);
+
+		JButton button = new JButton("Dodaj do bazy");
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, button, 53, SpringLayout.WEST, panelBooksB);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				baseEditor.enterData(firstNameData.getText(), lastNameData.getText(), titleData.getText(),
+				(Integer) spinnerItems.getValue(), "books");
 				MyTableModel.updateTable();
 				MyTableModel.fireTableDataChanged();
 			}
 		});
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, button, 12, SpringLayout.SOUTH, spinnerItems);
+		button.setBackground(SystemColor.textHighlight);
+		panelBooksB.add(button);
+		
+		JLabel lblPanelDodawaniaNowej = new JLabel("Panel dodawania nowej ksi\u0105\u017Cki");
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, lblPanelDodawaniaNowej, 10, SpringLayout.WEST, panelBooksB);
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, lblPanelDodawaniaNowej, 10, SpringLayout.NORTH, panelBooksB);
+		panelBooksB.add(lblPanelDodawaniaNowej);
+		
+		firstNameData = new JTextField();
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, firstNameData, 22, SpringLayout.SOUTH, lblPanelDodawaniaNowej);
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, firstNameData, 10, SpringLayout.WEST, panelBooksB);
+		sl_panelBooksB.putConstraint(SpringLayout.EAST, firstNameData, -6, SpringLayout.WEST, label);
+		panelBooksB.add(firstNameData);
+		firstNameData.setColumns(10);
+		
+		lastNameData = new JTextField();
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, lastNameData, 6, SpringLayout.SOUTH, firstNameData);
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, lastNameData, 10, SpringLayout.WEST, panelBooksB);
+		sl_panelBooksB.putConstraint(SpringLayout.EAST, lastNameData, -6, SpringLayout.WEST, label_1);
+		panelBooksB.add(lastNameData);
+		lastNameData.setColumns(10);
+		
+		titleData = new JTextField();
+		sl_panelBooksB.putConstraint(SpringLayout.NORTH, titleData, -3, SpringLayout.NORTH, label_2);
+		sl_panelBooksB.putConstraint(SpringLayout.WEST, titleData, 0, SpringLayout.WEST, lblPanelDodawaniaNowej);
+		sl_panelBooksB.putConstraint(SpringLayout.EAST, titleData, -6, SpringLayout.WEST, label_2);
+		panelBooksB.add(titleData);
+		titleData.setColumns(10);
 
-		toolBarBooksTools.add(btnNewButton);
+		JPanel panelBooksC = new JPanel();
+		panelCardBooks.add(panelBooksC, "panelBooksC");
+		panelBooksC.setForeground(SystemColor.desktop);
+		panelBooksC.setBorder(new LineBorder(Color.WHITE, 1, true));
+		panelBooksC.setBackground(SystemColor.control);
 
 		JPanel readersPanel = new JPanel();
 		tabbedPane.addTab("Czytelnicy", null, readersPanel, null);
@@ -293,35 +313,31 @@ public class Okno {
 		JButton btnModyfikuj = new JButton("Modyfikuj");
 		panel_1.add(btnModyfikuj);
 
-		JPanel panel_2 = new JPanel();
-		readersPanel.add(panel_2, BorderLayout.EAST);
-		panel_2.setLayout(new BorderLayout(0, 0));
+		JButton btnZmien = new JButton("Zmie\u0144/Usu\u0144");
+		btnZmien.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) (panelCardBooks.getLayout());
+				cl.show(panelCardBooks, "panelBooksA");
+			}
+		});
+		panelMenuBooks.add(btnZmien);
 
-		JButton btnAddReader = new JButton("Dodaj");
-		panel_2.add(btnAddReader, BorderLayout.SOUTH);
+		JButton btnDodaj = new JButton("Dodaj");
+		btnDodaj.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) (panelCardBooks.getLayout());
+				cl.show(panelCardBooks, "panelBooksB");
+			}
+		});
+		panelMenuBooks.add(btnDodaj);
 
-		JPanel panel_3 = new JPanel();
-		panel_2.add(panel_3, BorderLayout.CENTER);
-		panel_3.setLayout(null);
-
-		textField = new JTextField();
-		textField.setBounds(0, 11, 61, 20);
-		panel_3.add(textField);
-		textField.setColumns(10);
-
-		JLabel lblImi = new JLabel("Imi\u0119");
-		lblImi.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImi.setBounds(0, 29, 61, 17);
-		panel_3.add(lblImi);
-
-		textField_1 = new JTextField();
-		textField_1.setBounds(0, 61, 61, 20);
-		panel_3.add(textField_1);
-		textField_1.setColumns(10);
-
-		JLabel lblNazwisko = new JLabel("Nazwisko");
-		lblNazwisko.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNazwisko.setBounds(0, 86, 61, 14);
-		panel_3.add(lblNazwisko);
+		JButton btnWypozycz = new JButton("Wypo\u017Cycz");
+		btnWypozycz.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) (panelCardBooks.getLayout());
+				cl.show(panelCardBooks, "panelBooksC");
+			}
+		});
+		panelMenuBooks.add(btnWypozycz);
 	}
 }
