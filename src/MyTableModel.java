@@ -6,22 +6,51 @@ import javax.swing.table.AbstractTableModel;
 
 public class MyTableModel extends AbstractTableModel {
 
-	String[] columnNames = { "Imiê", "Nazwisko", "Tytu³", "Egzemplarze", "ID" };
+	String[] columnNames = new String[5];
 
 	ResultSet rs;
 	ResultSetMetaData md;
 
-	public MyTableModel() {
+	public MyTableModel(String baseName) {
 		DbEdit dbEdit = new DbEdit();
-		rs = dbEdit.readData();
+		rs = dbEdit.readData(baseName);
 		try {
 			md = rs.getMetaData();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
 
+		if (baseName == "books") {
+			columnNames[0] = "Imiê";
+			columnNames[1] = "Nazwisko";
+			columnNames[2] = "Tytu³";
+			columnNames[3] = "Egzemplarze";
+			columnNames[4] = "ID";
+		} else if (baseName == "readers") {
+			columnNames[0] = "Imiê";
+			columnNames[1] = "Nazwisko";
+			columnNames[2] = "ID";
+		}
+		
+		}
+
+
+	public MyTableModel(String baseName, int idReader) {
+		DbEdit dbEdit = new DbEdit();
+		rs = dbEdit.readData(baseName, idReader);
+		try {
+			md = rs.getMetaData();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+			columnNames[0] = "Imiê";
+			columnNames[1] = "Nazwisko";
+			columnNames[2] = "Tytu³";
+			columnNames[3] = "Data wypo¿yczenia";
+			columnNames[4] = "ID";
+	}
+	
 	public int getRowCount() {
 		int a = 0;
 		try {
@@ -29,7 +58,6 @@ public class MyTableModel extends AbstractTableModel {
 			a = rs.getRow();
 			rs.beforeFirst();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -43,7 +71,6 @@ public class MyTableModel extends AbstractTableModel {
 			e.printStackTrace();
 			return 0;
 		}
-
 	}
 
 	public String getColumnName(int a) {
@@ -58,17 +85,29 @@ public class MyTableModel extends AbstractTableModel {
 			e.printStackTrace();
 			return null;
 		}
-
 	};
 
-	public void updateTable() {
+	public void updateTable(String baseName) {
 		DbEdit dbEdit = new DbEdit();
-		rs = dbEdit.readData();
+		rs = dbEdit.readData(baseName);
 		try {
 			md = rs.getMetaData();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public void updateTable(String baseName, int idReader) {
+		DbEdit dbEdit = new DbEdit();
+		rs = dbEdit.readData(baseName, idReader);
+	
+		try {
+			md = rs.getMetaData();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.out.print("dupa");
 		}
 	}
 }
